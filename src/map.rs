@@ -941,7 +941,7 @@ where
     /// assert_eq!(map.get(&2), None);
     /// ```
     #[inline]
-    pub fn get<Q: ?Sized>(&self, k: &Q) -> Option<&V>
+    pub fn get<'a, 'b, Q: ?Sized>(&'a self, k: &'b Q) -> Option<&'a V>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -973,7 +973,7 @@ where
     /// assert_eq!(map.get_key_value(&2), None);
     /// ```
     #[inline]
-    pub fn get_key_value<Q: ?Sized>(&self, k: &Q) -> Option<(&K, &V)>
+    pub fn get_key_value<'a, 'b, Q: ?Sized>(&'a self, k: &'b Q) -> Option<(&'a K, &'a V)>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -986,7 +986,7 @@ where
     }
 
     #[inline]
-    fn get_inner<Q: ?Sized>(&self, k: &Q) -> Option<&(K, V)>
+    fn get_inner<'a, 'b, Q: ?Sized>(&'a self, k: &'b Q) -> Option<&'a (K, V)>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1019,7 +1019,10 @@ where
     /// assert_eq!(map.get_key_value_mut(&2), None);
     /// ```
     #[inline]
-    pub fn get_key_value_mut<Q: ?Sized>(&mut self, k: &Q) -> Option<(&K, &mut V)>
+    pub fn get_key_value_mut<'a, 'b, Q: ?Sized>(
+        &'a mut self,
+        k: &'b Q,
+    ) -> Option<(&'a K, &'a mut V)>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1081,7 +1084,7 @@ where
     /// assert_eq!(map[&1], "b");
     /// ```
     #[cfg_attr(feature = "inline-more", inline)]
-    pub fn get_mut<Q: ?Sized>(&mut self, k: &Q) -> Option<&mut V>
+    pub fn get_mut<'a, 'b, Q: ?Sized>(&'a mut self, k: &'b Q) -> Option<&'a mut V>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1094,7 +1097,7 @@ where
     }
 
     #[inline]
-    fn get_inner_mut<Q: ?Sized>(&mut self, k: &Q) -> Option<&mut (K, V)>
+    fn get_inner_mut<'a, 'b, Q: ?Sized>(&'a mut self, k: &'b Q) -> Option<&'a mut (K, V)>
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1141,10 +1144,10 @@ where
     /// );
     /// ```
     #[cfg(feature = "nightly")]
-    pub fn get_each_mut<Q: ?Sized, const N: usize>(
-        &mut self,
-        ks: [&Q; N],
-    ) -> [Result<&'_ mut V, UnavailableMutError>; N]
+    pub fn get_each_mut<'a, 'b, Q: ?Sized, const N: usize>(
+        &'a mut self,
+        ks: [&'b Q; N],
+    ) -> [Result<&'a mut V, UnavailableMutError>; N]
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1200,10 +1203,10 @@ where
     /// );
     /// ```
     #[cfg(feature = "nightly")]
-    pub fn get_each_key_value_mut<Q: ?Sized, const N: usize>(
-        &mut self,
-        ks: [&Q; N],
-    ) -> [Result<(&'_ K, &'_ mut V), UnavailableMutError>; N]
+    pub fn get_each_key_value_mut<'a, 'b, Q: ?Sized, const N: usize>(
+        &'a mut self,
+        ks: [&'b Q; N],
+    ) -> [Result<(&'a K, &'a mut V), UnavailableMutError>; N]
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
@@ -1222,10 +1225,10 @@ where
     }
 
     #[cfg(feature = "nightly")]
-    fn get_each_inner_mut<Q: ?Sized, const N: usize>(
-        &mut self,
-        ks: [&Q; N],
-    ) -> [Result<&'_ mut (K, V), UnavailableMutError>; N]
+    fn get_each_inner_mut<'a, 'b, Q: ?Sized, const N: usize>(
+        &'a mut self,
+        ks: [&'b Q; N],
+    ) -> [Result<&'a mut (K, V), UnavailableMutError>; N]
     where
         K: Borrow<Q>,
         Q: Hash + Eq,
